@@ -1,0 +1,111 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+
+.logo {
+  height: 12em;
+  padding: 1em;
+  border-radius: 1.5rem; 
+  background: #222; 
+ 
+  margin: 0 1rem;
+  transition: transform 0.3s ease;
+}
+/* .logo:hover {
+  transform: scale(1.1);
+  box-shadow:
+    0 0 20px 4px #fff,
+    inset 0 0 12px 2px #fff;
+} */
+
+/* Header container - bubbly border & spacing */
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+
+
+  border: 0.5em solid #fefefe;
+  border-radius: 2rem;
+  padding: 1rem 2rem;
+  background: #222; /* dark background inside the border */
+  box-shadow:
+    0 4px 15px rgba(255, 255, 255, 0.15);
+}
+
+
+h1, h2 {
+  color: #fafafa;
+  text-shadow: 0 0 6px rgba(255,255,255,0.4);
+}
+
+/* Buttons with bubbly style */
+button {
+  background-color: #fefefe;
+  color: #121212;
+  border: none;
+  border-radius: 1.5rem;
+  padding: 0.8rem 2rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow:
+    0 6px 12px rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 1rem;
+}
+button:hover {
+  background-color: #fff;
+  transform: scale(1.05);
+  box-shadow:
+    0 10px 20px rgba(255, 255, 255, 0.6);
+}
+
+/* Paragraph styling */
+p {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #ddd;
+  max-width: 600px;
+  margin: 1rem auto;
+  text-shadow: 0 0 3px rgba(255,255,255,0.2);
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  box-shadow:
+    0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.8rem;
+  margin: 0.5rem 0;
+  border: none;
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.144);
+  color: #ffffff;
+  font-size: 1rem;
+  box-shadow:
+    0 2px 5px rgba(255, 255, 255, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; } 
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {  
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 4px 10px rgba(255, 255, 255, 0.2);
+}
