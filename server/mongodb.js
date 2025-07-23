@@ -2,8 +2,7 @@
 
 const { MongoClient } = require('mongodb');
 
-const uri = "mongodb+srv://vivianbonilla:8DU9JlJXPSrcjiCM@capstone.gptiazz.mongodb.net/?retryWrites=true&w=majority";
-const client = new MongoClient(uri);
+const uri = process.env.MONGO_URI; 
 
 let db;
 
