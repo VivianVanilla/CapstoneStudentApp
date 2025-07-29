@@ -1,17 +1,21 @@
-
-
+// mongodb.js
 const { MongoClient } = require('mongodb');
+const dotenv = require('dotenv');
 
-const uri = process.env.MONGO_URI; 
+dotenv.config();
 
+const uri = process.env.MONGO_URI;
+
+let client;
 let db;
 
 async function connectDB() {
-  if (!db) {
+  if (db) return db;
+  if (!client) {
+    client = new MongoClient(uri);
     await client.connect();
-    db = client.db("capstonedata");
-    console.log("Connected to MongoDB");
   }
+  db = client.db('capstonedata'); // default DB from URI
   return db;
 }
 

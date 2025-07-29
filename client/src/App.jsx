@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Signup from './pages/signup';
 import Login from './pages/login';
 import Dashboardcourses from './pages/dashboard-courses';
-import Dashboardsettings from './pages/dashboard-settings';
+
 
 import Dashboardaccount from './pages/dashboard-account';
 import Dashboardstudentmanagement from './pages/dashboard-studentmanagement';
@@ -25,7 +25,7 @@ export default function App() {
         <Route path="/" element={<Signup message={message} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboardcourses" element={<Dashboardcourses />} />
-        <Route path="/dashboardsettings" element={<Dashboardsettings />} />
+        
         <Route path="/dashboardaccount" element={<Dashboardaccount />} />
         <Route path="/dashboardstudentmanagement" element={<Dashboardstudentmanagement />} />
         <Route path="*" element={<h1>404 Not Found</h1>} />

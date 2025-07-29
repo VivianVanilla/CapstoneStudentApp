@@ -156,9 +156,9 @@ input[type="password"]:focus {
 
 /* Sidebar */
 .sidebar {
-  width: 20%;
-  
-  height: 90vh;
+  width: 15%;
+  min-height: 87vh;
+
   background: #4242424d;
   color: #fff;
   border-radius: 1.5rem 0 0 1.5rem;
@@ -169,13 +169,17 @@ input[type="password"]:focus {
   box-shadow: inset -1px 0 5px rgba(0,0,0,0.4);
 }
 
-/* Content area */
 .dashboard-content {
-  flex: 1; /* Take the remaining space */
-  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem; 
+  padding: 1rem;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 0 1.5rem 1.5rem 0;
   box-shadow: inset 1px 0 5px rgba(255, 255, 255, 0.1);
+  min-height: 80vh;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 
@@ -197,14 +201,15 @@ input[type="password"]:focus {
 }
 
 .sidebar a {
-  display: block;      /* Makes link cover the entire h2 area */
-  text-decoration: none; /* Remove underline */
-  color: inherit;      /* Use h2 color */
+
+  display: block;     
+  text-decoration: none;
+  color: inherit;     
 }
 
 .sidebar h2 a {
-  color: inherit; /* Inherit color from parent */
-  text-decoration: none; /* Remove underline */
+  color: inherit; 
+  text-decoration: none;
 }
 
 .sidebar h2:hover {
@@ -218,4 +223,67 @@ input[type="password"]:focus {
   font-weight: bold;
   transform: none;
 }
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
 
+}
+
+.course-bubble {
+  width: 100%;          
+  aspect-ratio: 3 / 1;   
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2rem;
+  padding: 7rem;
+  box-sizing: border-box; 
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.course-bubble:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.course-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: rem;
+}
+.course-buttons button {
+  
+  border: none;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  cursor: pointer;
+  
+}
+
+.course-buttons button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.account-details {
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0 1.5rem 1.5rem 0;
+  box-shadow: inset 1px 0 5px rgba(255, 255, 255, 0.1);
+  min-width: 80vw;
+
+}
