@@ -18,13 +18,13 @@ export default function Home({ message }) {
     const formData = Object.fromEntries(new FormData(e.target).entries());
     console.log(formData);
 
-     const isUnique = await checkUnique(formData.username, formData.email, formData.phone || '');
-     
-  if (!isUnique) {
-    alert('Username, email, or phone is already in use.');
-    return; 
-  }
+    const isUnique = await checkUnique(formData.username, formData.email, formData.phone || '');
+    if (!isUnique) {
+      alert('Username, email, or phone is already in use.');
+      return; 
+    }
 
+    formData.userId = Date.now();
 
     try {
       const response = await fetch('http://localhost:5000/register', {
@@ -33,7 +33,6 @@ export default function Home({ message }) {
         body: JSON.stringify(formData),
       });
 
-      
       const result = await response.json();
       console.log('Server response:', result);
     } catch (err) {

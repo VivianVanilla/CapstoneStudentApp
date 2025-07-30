@@ -118,5 +118,65 @@ app.post('/checktoken', (req, res) => {
   });
 });
 
+app.get('/user', async (req, res) => {
+  const token = req.headers.authorization;
+  if (!token) return res.status(401).json({ error: 'No token provided' });
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+    try {
+      const db = await connectDB();
+      const user = await db.collection('students').findOne({ username: decoded.username });
+      if (!user) return res.status(404).json({ error: 'User not found' });
+
+      const { password, ...userData } = user;
+      res.json(userData);
+    } catch (error) {
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+});
+
+app.post('/userchange', async (req, res) => {
+  
+  const token = req.headers.authorization;
+
+  if (!token) return res.status(401).json({ error: 'No token provided' });
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+   
+    try {
+      const db = await connectDB();
+      const { field, value } = req.body;
+
+      const update = {};
+      if (field === 'password') {
+        const hashed = await bcrypt.hash(value, 13);
+        update.password = hashed;
+      } else {
+        update[field] = value;
+      }
+      const result = await db.collection('students').findOneAndUpdate(
+        { username: decoded.username },
+        { $set: update },
+        { returnDocument: 'after' }
+      );
+
+      console.log('Received token:', result);
+      if (!result) return res.status(404).json({ error: 'User not found' });
+
+      const { password, ...userData } = result;
+      return res.json(userData);
+    } catch (error) {
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

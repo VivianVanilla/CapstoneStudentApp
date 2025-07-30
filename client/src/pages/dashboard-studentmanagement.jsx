@@ -2,23 +2,30 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Dashboardstudentmanagement() {
-  const admin = true; // This should be replaced with actual admin check logic
+
+
+  const admin = true; // Only an admin would be allowed in this page, so maybe this logic is okay lmao . WEll cause WHY DO I EVEN NEED USER DATA IN HERE  
+   
   const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="dashboard">
       <div className="sidebar">
         <h2><Link to="/dashboardaccount">Account</Link></h2>
-        <h2 className="highlight"><Link to="/dashboardcourses">Courses</Link></h2>
-        {admin === true && <h2><Link to="/dashboardstudentmanagement">Student Management</Link></h2>}
+        <h2 ><Link to="/dashboardcourses">Courses</Link></h2>
+        {admin === true && <h2 className="highlight"><Link to="/dashboardstudentmanagement">Student Management</Link></h2>}
       </div>
 
       <div>
-        <div>
+        <div className="dashboard-header">
+          <button onClick={() => {}}>Create a Student</button>
           <input type="text" placeholder="Search for students..." />
           <button>Search</button>
-          <button onClick={() => setShowModal(true)}>Filter modal</button>
+          <button onClick={() => setShowModal(true)}>Filter Search</button>
+          
         </div>
+
+        {/* Modal MODAL MODAL AHHHHH*/}
 
         {showModal && (
           <div style={{
@@ -58,36 +65,13 @@ export default function Dashboardstudentmanagement() {
         )}
 
         <div className="dashboard-content">
-          <div className="course-bubble">
-            <h4>Alice</h4>
-            <h4>Smith</h4>
-            <p>alice@email.com</p>
-     
-            <div className="course-buttons">
-              <button>Registered Courses</button>
-              <button>Edit Details</button>
-            </div>
+          <div className="student-bubble">
+            <h3>First Name: <span>Alice</span></h3>
+            <h3>Last Name: <span>Smith</span></h3>
+            <p>Email: <span>alice@email.com</span></p>
+            <button>View Profile</button>
           </div>
-          <div className="course-bubble">
-            <h4>Bob</h4>
-            <h4>Johnson</h4>
-            <p>bob@email.com</p>
-        
-            <div className="course-buttons">
-              <button>Registered Courses</button>
-              <button>Edit Details</button>
-            </div>
-          </div>
-          <div className="course-bubble">
-            <h4>Charlie</h4>
-            <h4>Williams</h4>
-            <p>charlie@email.com</p>
-         
-            <div className="course-buttons">
-              <button>Registered Courses</button>
-              <button>Edit Details</button>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
