@@ -38,11 +38,6 @@ passport.use(
   )
 );
 
-// ----- API Routes -----
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello from Express backend!' });
-});
-
 // ----- Serve React build in production only -----
 const CLIENT_DIST_PATH = path.join(__dirname, '../client/dist');
 
