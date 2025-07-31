@@ -10,19 +10,14 @@ import Dashboardstudentmanagement from './pages/dashboard-studentmanagement';
 import './App.css';
 
 export default function App() {
-  const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    fetch('http://localhost:5000/api/hello')
-      .then(res => res.json())
-      .then(data => setMessage(data.message))
-      .catch(err => console.error(err));
-  }, []);
+
+
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Signup message={message} />} />
+        <Route path="/" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboardcourses" element={<Dashboardcourses />} />
         

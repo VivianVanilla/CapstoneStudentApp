@@ -15,7 +15,7 @@ export default function Dashboardcourses() {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const API = process.env.REACT_APP_API_URL;
 
   const handleNav = (path) => {
     setLoading(true);
@@ -28,14 +28,14 @@ export default function Dashboardcourses() {
   const fetchUser = useCallback(async () => {
     const token = localStorage.getItem('token');
     if (!token) return;
-    const res = await fetch('http://localhost:5000/user', {
+    const res = await fetch(`${API}/user`, {
       headers: { 'Authorization': token }
     });
     if (res.ok) {
       const data = await res.json();
       setUser(data);
     }
-  }, []);
+  }, [API]);
 
   useEffect(() => {
     fetchUser();
@@ -44,12 +44,12 @@ export default function Dashboardcourses() {
   const admin = user?.admin;
 
   const fetchCourses = useCallback(async () => {
-    const res = await fetch('http://localhost:5000/courses');
+    const res = await fetch(`${API}/courses`);
     if (res.ok) {
       const data = await res.json();
       setCourses(data);
     }
-  }, []);
+  }, [API]);
 
   useEffect(() => {
     fetchCourses();
@@ -58,7 +58,7 @@ export default function Dashboardcourses() {
   const handleSignUp = useCallback(async (courseId) => {
     const token = localStorage.getItem('token');
     if (!token || !user?.userId || !courseId) return;
-    const res = await fetch('http://localhost:5000/signedupcourses', {
+    const res = await fetch(`${API}/signedupcourses`, {
       method: 'POST',
       headers: { 'Authorization': token, 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId: user.userId, courseId }),
@@ -66,12 +66,12 @@ export default function Dashboardcourses() {
     if (res.ok) {
       await fetchUser(); 
     }
-  }, [user, fetchUser]);
+  }, [user, fetchUser, API]);
 
   const handleRemoveCourse = useCallback(async (courseId) => {
     const token = localStorage.getItem('token');
     if (!token || !user?.userId || !courseId) return;
-    const res = await fetch('http://localhost:5000/removecourses', {
+    const res = await fetch(`${API}/removecourses`, {
       method: 'DELETE',
       headers: { 'Authorization': token, 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId: user.userId, courseId }),
@@ -79,12 +79,12 @@ export default function Dashboardcourses() {
     if (res.ok) {
       await fetchUser(); 
     }
-  }, [user, fetchUser]);
+  }, [user, fetchUser, API]);
 
   const handleCreateCourse = useCallback(async (courseData) => {
     const token = localStorage.getItem('token');
     if (!token) return;
-    const res = await fetch('http://localhost:5000/createcourses', {
+    const res = await fetch(`${API}/createcourses`, {
       method: 'POST',
       headers: { 'Authorization': token, 'Content-Type': 'application/json' },
       body: JSON.stringify(courseData),
@@ -92,12 +92,12 @@ export default function Dashboardcourses() {
     if (res.ok) {
       await fetchCourses();
     }
-  }, [fetchCourses]);
+  }, [fetchCourses, API]);
 
   const handleDeleteCourse = useCallback(async (courseId) => {
     const token = localStorage.getItem('token');
     if (!token) return;
-    const res = await fetch('http://localhost:5000/deletecourses', {
+    const res = await fetch(`${API}/deletecourses`, {
       method: 'DELETE',
       headers: { 'Authorization': token, 'Content-Type': 'application/json' },
       body: JSON.stringify({ courseId }),
@@ -105,7 +105,7 @@ export default function Dashboardcourses() {
     if (res.ok) {
       await fetchCourses();
     }
-  }, [fetchCourses]);
+  }, [fetchCourses, API]);
 
   const handleCreateCourseSubmit = async (e) => {
     e.preventDefault();

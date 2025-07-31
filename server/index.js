@@ -8,12 +8,22 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local');
 
+
+
+
 dotenv.config();
 
 const app = express();
 
 // ----- Middleware -----
-app.use(cors());
+
+app.use(cors({
+  origin: [
+    'https://capstonestudentapp.onrender.com',
+    'https://capstonestudentapp-1.onrender.com'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 app.use(passport.initialize());
 
@@ -37,11 +47,6 @@ passport.use(
     }
   )
 );
-
-// ----- API Routes -----
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello from Express backend!' });
-});
 
 // ----- Serve React build in production only -----
 const CLIENT_DIST_PATH = path.join(__dirname, '../client/dist');

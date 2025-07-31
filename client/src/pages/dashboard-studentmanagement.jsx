@@ -15,6 +15,7 @@ export default function Dashboardstudentmanagement() {
   const [filter, setFilter] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+    const API = process.env.REACT_APP_API_URL;
 
   // Loading handler for navigation
   const handleNav = (path) => {
@@ -40,7 +41,7 @@ export default function Dashboardstudentmanagement() {
     const fetchStudents = async () => {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await fetch('http://localhost:5000/students', {
+      const res = await fetch(`${API}/students`, {
         headers: { 'Authorization': token }
       });
       if (res.ok) {
@@ -49,7 +50,7 @@ export default function Dashboardstudentmanagement() {
       }
     };
     const fetchCourses = async () => {
-      const res = await fetch('http://localhost:5000/courses');
+      const res = await fetch(`${API}/courses`);
       if (res.ok) {
         const data = await res.json();
         setCourses(data);
@@ -57,7 +58,7 @@ export default function Dashboardstudentmanagement() {
     };
     fetchStudents();
     fetchCourses();
-  }, []);
+  }, [API]);
 
 
   const handleViewProfile = (student) => {
@@ -86,7 +87,6 @@ export default function Dashboardstudentmanagement() {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-  
     const fields = [
       'username',
       'firstName',
@@ -97,13 +97,12 @@ export default function Dashboardstudentmanagement() {
       'phone'
     ];
 
-  
     for (const field of fields) {
       if (
         editStudent[field] !== selectedStudent[field] &&
         (field !== 'password' ? editStudent[field] : editStudent[field].length > 0)
       ) {
-        await fetch('http://localhost:5000/adminuserchange', {
+        await fetch(`${API}/adminuserchange`, {
           method: 'POST',
           headers: {
             'Authorization': token,
@@ -118,9 +117,6 @@ export default function Dashboardstudentmanagement() {
       }
     }
 
-
-
-   
     const origCourses = selectedStudent.courses || [];
     const newCourses = editStudent.courses || [];
 
@@ -129,7 +125,7 @@ export default function Dashboardstudentmanagement() {
 
     // Add student to new courses
     for (const courseid of addedCourses) {
-      await fetch('http://localhost:5000/addstudenttocourse', {
+      await fetch(`${API}/addstudenttocourse`, {
         method: 'POST',
         headers: {
           'Authorization': token,
@@ -144,7 +140,7 @@ export default function Dashboardstudentmanagement() {
 
     // Remove student from removed courses
     for (const courseid of removedCourses) {
-      await fetch('http://localhost:5000/removestudentfromcourse', {
+      await fetch(`${API}/removestudentfromcourse`, {
         method: 'DELETE',
         headers: {
           'Authorization': token,
@@ -161,7 +157,7 @@ export default function Dashboardstudentmanagement() {
     setEditStudent(null);
 
     // Refresh students
-    const res = await fetch('http://localhost:5000/students', {
+    const res = await fetch(`${API}/students`, {
       headers: { 'Authorization': token }
     });
     if (res.ok) {
@@ -174,13 +170,13 @@ export default function Dashboardstudentmanagement() {
   const handleCreateStudent = async (studentData) => {
     const token = localStorage.getItem('token');
     if (!token) return;
-    await fetch('http://localhost:5000/createstudent', {
+    await fetch(`${API}/createstudent`, {
       method: 'POST',
       headers: { 'Authorization': token, 'Content-Type': 'application/json' },
       body: JSON.stringify(studentData)
     });
     // Refresh students
-    const res = await fetch('http://localhost:5000/students', {
+    const res = await fetch(`${API}/students`, {
       headers: { 'Authorization': token }
     });
     if (res.ok) {

@@ -5,10 +5,11 @@ import { useState } from 'react';
 export default function Home({ message }) {
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
-
+  const API = process.env.REACT_APP_API_URL;
+  
   const checkUnique = async (username, email, phone) => {
     const query = `username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}`;
-    const response = await fetch(`http://localhost:5000/unique?${query}`);
+    const response = await fetch(`${API}/unique?${query}`);
     const data = await response.json();
     return data.unique;
   };
@@ -25,7 +26,7 @@ export default function Home({ message }) {
     formData.userId = Date.now();
 
     try {
-      const response = await fetch('http://localhost:5000/register', {
+      const response = await fetch(`${API}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

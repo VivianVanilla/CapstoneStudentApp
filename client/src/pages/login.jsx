@@ -7,13 +7,13 @@ export default function Login() {
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
+  const API = process.env.REACT_APP_API_URL;
   const checkToken = async () => {
     const token = localStorage.getItem('token');
     if (!token) return;
 
     setLoading(true); 
-    const response = await fetch('http://localhost:5000/checktoken', {
+    const response = await fetch(`${API}/checktoken`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,21 +51,26 @@ export default function Login() {
     e.preventDefault();
 
     const formData = Object.fromEntries(new FormData(e.target).entries());
-    console.log(formData);
-
     try { 
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch(`${API}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
 
-      if (response.ok) {
-         const data = await response.json();
+      let data = {};
+      const text = await response.text();
+      try {
+        data = JSON.parse(text);
+      } catch {
+        // Not valid JSON, leave data as {}
+      }
+
+      if (response.ok && data.token) {
         localStorage.setItem('token', data.token);
         navigate('/dashboardcourses');
       } else {
-        alert('password or username is incorrect');
+        alert(data.error || 'Password or username is incorrect');
         console.error('Login failed:', response.statusText);
       }
     } catch (error) {
