@@ -5,7 +5,7 @@ import { useState } from 'react';
 export default function Home({ message }) {
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
-  const API = process.env.API;
+  const API = process.env.REACT_APP_API_URL;
   
   const checkUnique = async (username, email, phone) => {
     const query = `username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}`;
