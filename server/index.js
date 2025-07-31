@@ -18,7 +18,10 @@ const app = express();
 // ----- Middleware -----
 
 app.use(cors({
-  origin: 'https://capstonestudentapp-1.onrender.com',
+  origin: [
+    'https://capstonestudentapp.onrender.com',
+    'https://capstonestudentapp-1.onrender.com'
+  ],
   credentials: true
 }));
 app.use(express.json());
