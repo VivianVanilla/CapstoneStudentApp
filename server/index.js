@@ -8,6 +8,12 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local');
 
+const cors = require('cors');
+app.use(cors({
+  origin: 'https://capstonestudentapp-1.onrender.com/',
+  credentials: true
+}));
+
 dotenv.config();
 
 const app = express();
