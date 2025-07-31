@@ -6,6 +6,17 @@ export default function Dashboardaccount() {
   const [user, setUser] = useState(null);
   const [inputs, setInputs] = useState({});
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+
+
+  const handleNav = (path) => {
+    setLoading(true);
+    setTimeout(() => {
+      navigate(path);
+      setLoading(false);
+    }, 600); 
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -54,34 +65,13 @@ export default function Dashboardaccount() {
     });
 
      const result = await response.json();
-     console.log('Field updated:', result);
+     alert('Update Recorded');
   } catch (error) {
     console.error('Error updating field:', error);
   }
  
   };
-  
-  // const handleFieldChange = async (field) => {
-  //   const token = localStorage.getItem('token');
-  //   if (!token || !user) return;
-  //   const res = await fetch('http://localhost:5000/userchange', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': token
-  //     },
-  //     body: JSON.stringify({
-  //       field,
-  //       value: inputs[field]
-  //     })
-  //   });
-  //   if (res.ok) {
-  //     await res.json();
-  //     alert('Update Recorded');
-  //   } else {
-  //     alert('Failed to update field.');
-  //   }
-  // };
+
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -94,11 +84,29 @@ export default function Dashboardaccount() {
 
 
   return (
+    
     <div className="dashboard"> 
-    <div className="sidebar"> 
-      <h2 className="highlight"><Link to="/dashboardaccount">Account</Link></h2>
-      <h2  ><Link to="/dashboardcourses">Courses</Link></h2>
-      {admin === true && <h2><Link to="/dashboardstudentmanagement">Student Management</Link></h2>}
+      {loading && (
+  <div style={{
+    position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+    background: 'rgba(0,0,0,0.7)', color: '#fff', zIndex: 3000,
+    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem'
+  }}>
+    Loading...
+  </div>
+)}
+       <div className="sidebar">
+        <h2 className="highlight">
+          <span  onClick={() => handleNav('/dashboardaccount')}>Account</span>
+        </h2>
+        <h2>
+          <span  onClick={() => handleNav('/dashboardcourses')}>Courses</span>
+        </h2>
+        {admin === true && (
+          <h2 >
+            <span  onClick={() => handleNav('/dashboardstudentmanagement')}>Student Management</span>
+          </h2>
+        )}
       </div>
     
       <div className="dashboard-content">
@@ -146,7 +154,7 @@ export default function Dashboardaccount() {
 
           {/*I am the god of this world. YOU WILL EMAIL ME IF YOU WANT TO BE AN ADMIN HAHAHAHAHAH*/}
 
-          <h2>{user.role || 'Student'}</h2> 
+          <h2>{user.admin ? 'Admin' : 'Student'}</h2> 
          <a
               href="mailto:vivian.bonilla@outlook.com?subject=Request%20Admin%20Access&body=Hello%20Vivian,%0A%0AI%20would%20like%20to%20request%20admin%20access%20:P.%0A%0AThank%20you!"
               className="button"

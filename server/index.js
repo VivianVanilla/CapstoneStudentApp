@@ -69,6 +69,92 @@ app.get('/unique', async (req, res) => {
   }
 });
 
+app.get('/courses', async (req, res) => {
+  try {
+    const db = await connectDB();
+    const courses = await db.collection('courses').find().toArray();
+    res.json(courses);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error.' });
+  }
+});
+
+app.post('/signedupcourses', async (req, res) => {
+  const { userId, courseId } = req.body;
+
+  try {
+    const db = await connectDB();
+
+    
+    await db.collection('students').updateOne(
+      { userId },
+      { $addToSet: { courses: courseId } }
+    );
+
+   
+    await db.collection('courses').updateOne(
+      { courseid: courseId },
+      { $addToSet: { students: userId } }
+    );
+
+    res.status(200).json({ message: 'Signup successful' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error.' });
+  }
+});
+
+app.post('/createcourses', async (req, res) => {
+  const courseData = req.body;
+
+  try {
+    const db = await connectDB();
+    await db.collection('courses').insertOne(courseData);
+    res.status(201).json({ message: 'Course created successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error.' });
+  }
+});
+
+app.delete('/deletecourses', async (req, res) => {
+  const { courseId } = req.body; 
+  try {
+    const db = await connectDB();
+    await db.collection('courses').deleteOne({ courseid: courseId });
+    res.status(200).json({ message: 'Course deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error.' });
+  }
+});
+
+app.delete('/removecourses', async (req, res) => {
+  const { userId, courseId } = req.body;
+
+  try {
+    const db = await connectDB();
+
+   
+    await db.collection('students').updateOne(
+      { userId },
+      { $pull: { courses: courseId } }
+    );
+
+   
+    await db.collection('courses').updateOne(
+      { courseid: courseId },
+      { $pull: { students: userId } }
+    );
+
+    res.status(200).json({ message: 'Course removed successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error.' });
+  }
+});
+
 // Register
 app.post('/register', async (req, res) => {
   const db = await connectDB();
@@ -79,6 +165,7 @@ app.post('/register', async (req, res) => {
     newUser.password = hashedPassword;
     newUser.username = newUser.username.toLowerCase();
     newUser.email = newUser.email.toLowerCase();
+    newUser.courses = []; 
   } catch (error) {
     console.error('Error hashing password:', error);
     return res.status(500).json({ error: 'Internal server error' });
@@ -116,6 +203,17 @@ app.post('/checktoken', (req, res) => {
       token: token,
     });
   });
+});
+
+app.get('/students', async (req, res) => {
+  try {
+    const db = await connectDB();
+    const students = await db.collection('students').find().toArray();
+    res.json(students);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 app.get('/user', async (req, res) => {
@@ -174,6 +272,166 @@ app.post('/userchange', async (req, res) => {
       return res.json(userData);
     } catch (error) {
       res.status(500).json({ error: 'Server error' });
+    }
+  });
+});
+
+app.post('/adminuserchange', async (req, res) => {
+  const token = req.headers.authorization;
+  if (!token) return res.status(401).json({ error: 'No token provided' });
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    try {
+      const db = await connectDB();
+      const { userId, field, value } = req.body;
+
+      const update = {};
+      if (field === 'password') {
+        const hashed = await bcrypt.hash(value, 13);
+        update.password = hashed;
+      } else {
+        update[field] = value;
+      }
+      const result = await db.collection('students').findOneAndUpdate(
+        { userId },
+        { $set: update },
+        { returnDocument: 'after' }
+      );
+
+      if (!result) return res.status(404).json({ error: 'User not found' });
+
+      const { password, ...userData } = result;
+      return res.json(userData);
+    } catch (error) {
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+});
+
+app.post('/addcoursetostudent', async (req, res) => {
+  const token = req.headers.authorization;
+  if (!token) return res.status(401).json({ error: 'No token provided' });
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err) => {
+    if (err) return res.status(401).json({ error: 'Invalid token' });
+
+    try {
+      const db = await connectDB();
+      const { username, courseid } = req.body;
+
+     
+      const studentResult = await db.collection('students').findOneAndUpdate(
+        { username },
+        { $addToSet: { courses: courseid } },
+        { returnDocument: 'after' }
+      );
+
+      if (!studentResult.value) return res.status(404).json({ error: 'Student not found' });
+
+      await db.collection('courses').updateOne(
+        { courseid },
+        { $addToSet: { students: username } }
+      );
+
+      res.status(200).json({ message: 'Course and student updated successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+});
+
+app.post('/addstudenttocourse', async (req, res) => {
+  const token = req.headers.authorization;
+  if (!token) return res.status(401).json({ error: 'No token provided' });
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err) => {
+    if (err) return res.status(401).json({ error: 'Invalid token' });
+
+    try {
+      const db = await connectDB();
+      const { username, courseid } = req.body;
+
+
+      const student = await db.collection('students').findOne({ username });
+      if (!student) return res.status(404).json({ error: 'Student not found' });
+
+   
+      await db.collection('students').updateOne(
+        { username },
+        { $addToSet: { courses: courseid } }
+      );
+
+     
+      await db.collection('courses').updateOne(
+        { courseid },
+        { $addToSet: { students: student.userId } }
+      );
+
+      res.status(200).json({ message: 'Student added to course successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+});
+
+app.delete('/removestudentfromcourse', async (req, res) => {
+  const token = req.headers.authorization;
+  if (!token) return res.status(401).json({ error: 'No token provided' });
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err) => {
+    if (err) return res.status(401).json({ error: 'Invalid token' });
+
+    try {
+      const db = await connectDB();
+      const { username, courseid } = req.body;
+
+      await db.collection('students').updateOne(
+        { username },
+        { $pull: { courses: courseid } }
+      );
+
+      await db.collection('courses').updateOne(
+        { courseid },
+        { $pull: { students: username } }
+      );
+
+      res.status(200).json({ message: 'Course removed from student successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+});
+
+app.post('/createstudent', async (req, res) => {
+  const token = req.headers.authorization;
+  if (!token) return res.status(401).json({ error: 'No token provided' });
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err) => {
+    if (err) return res.status(401).json({ error: 'Invalid token' });
+
+    try {
+      const db = await connectDB();
+      const newStudent = req.body;
+      newStudent.username = newStudent.username.toLowerCase();
+      newStudent.email = newStudent.email.toLowerCase();
+      newStudent.courses = [];
+
+      const plainpassword = newStudent.password;
+      const hashedPassword = await bcrypt.hash(plainpassword, 13);
+      newStudent.password = hashedPassword;
+
+      await db.collection('students').insertOne(newStudent);
+      res.status(201).json(newStudent);
+    } catch (error) {
+      console.error('Error creating student:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   });
 });

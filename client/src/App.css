@@ -311,3 +311,16 @@ input[type="password"]:focus {
 .dashboard-header button {
   margin: 0.5rem;
 }
+textarea {
+  width: 100%;
+  max-width: 600px;
+  padding: 0.8rem;
+  margin: 0.5rem 0;
+  border: none;
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.144);
+  color: #ffffff;
+  font-size: 1rem;
+  box-shadow:
+    0 2px 5px rgba(255, 255, 255, 0.1);
+}
