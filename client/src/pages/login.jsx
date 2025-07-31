@@ -51,8 +51,6 @@ export default function Login() {
     e.preventDefault();
 
     const formData = Object.fromEntries(new FormData(e.target).entries());
-    console.log(formData);
-
     try { 
       const response = await fetch(`${API}/login`, {
         method: 'POST',
@@ -60,12 +58,19 @@ export default function Login() {
         body: JSON.stringify(formData)
       });
 
-      if (response.ok) {
-         const data = await response.json();
+      let data = {};
+      const text = await response.text();
+      try {
+        data = JSON.parse(text);
+      } catch {
+        // Not valid JSON, leave data as {}
+      }
+
+      if (response.ok && data.token) {
         localStorage.setItem('token', data.token);
         navigate('/dashboardcourses');
       } else {
-        alert('password or username is incorrect');
+        alert(data.error || 'Password or username is incorrect');
         console.error('Login failed:', response.statusText);
       }
     } catch (error) {
