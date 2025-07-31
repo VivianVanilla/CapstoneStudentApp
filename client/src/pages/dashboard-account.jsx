@@ -7,7 +7,7 @@ export default function Dashboardaccount() {
   const [inputs, setInputs] = useState({});
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
+  const API = process.env.API;
 
 
   const handleNav = (path) => {
@@ -22,7 +22,7 @@ export default function Dashboardaccount() {
     const fetchUser = async () => {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await fetch('http://localhost:5000/user', {
+      const res = await fetch(`${API}/user`, {
         headers: { 'Authorization': token }
       });
       if (res.ok) {
@@ -51,7 +51,7 @@ export default function Dashboardaccount() {
     const token = localStorage.getItem('token');
     if (!token || !user) return;
     try {
-    const response = await fetch('http://localhost:5000/userchange', {
+    const response = await fetch(`${API}/userchange`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

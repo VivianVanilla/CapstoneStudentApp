@@ -7,13 +7,13 @@ export default function Login() {
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
+  const API = process.env.API;
   const checkToken = async () => {
     const token = localStorage.getItem('token');
     if (!token) return;
 
     setLoading(true); 
-    const response = await fetch('http://localhost:5000/checktoken', {
+    const response = await fetch(`${API}/checktoken`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ export default function Login() {
     console.log(formData);
 
     try { 
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch(`${API}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
