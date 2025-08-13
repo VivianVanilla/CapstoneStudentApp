@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
 export default function Dashboardcourses() {
   const [user, setUser] = useState(null);
   const [courses, setCourses] = useState([]);
@@ -15,7 +16,7 @@ export default function Dashboardcourses() {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const API = process.env.REACT_APP_API_URL;
+  const API = import.meta.env.VITE_API_URL;
 
   const handleNav = (path) => {
     setLoading(true);

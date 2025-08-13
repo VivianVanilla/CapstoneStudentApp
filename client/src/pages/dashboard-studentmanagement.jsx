@@ -15,7 +15,7 @@ export default function Dashboardstudentmanagement() {
   const [filter, setFilter] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-    const API = process.env.REACT_APP_API_URL;
+   const API = import.meta.env.VITE_API_URL;
 
   // Loading handler for navigation
   const handleNav = (path) => {

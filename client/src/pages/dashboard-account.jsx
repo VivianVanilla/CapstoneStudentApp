@@ -7,7 +7,7 @@ export default function Dashboardaccount() {
   const [inputs, setInputs] = useState({});
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const API = process.env.REACT_APP_API_URL;
+  const API = import.meta.env.VITE_API_URL;
 
 
   const handleNav = (path) => {
