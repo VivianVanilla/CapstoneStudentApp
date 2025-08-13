@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 const connectDB = require('./mongodb.js');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
@@ -48,15 +47,6 @@ passport.use(
   )
 );
 
-// ----- Serve React build in production only -----
-const CLIENT_DIST_PATH = path.join(__dirname, '../client/dist');
-
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(CLIENT_DIST_PATH));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(CLIENT_DIST_PATH, 'index.html'));
-  });
-}
 
 // Mongo Connection
 app.get('/unique', async (req, res) => {
@@ -439,10 +429,6 @@ app.post('/createstudent', async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   });
-});
-
-app.get('/api/test', (req, res) => {
-  res.json({ message: 'Backend is working!', timestamp: new Date().toISOString() });
 });
 
 const PORT = process.env.PORT || 5000;
